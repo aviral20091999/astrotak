@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import { Text,FlatList,View,Image,StyleSheet,Dimensions, TouchableOpacity } from 'react-native';
 const screenWidth = Math.round((Math.round(Dimensions.get('window').width)));
 class AstrologerCollection extends Component {
@@ -15,10 +16,10 @@ class AstrologerCollection extends Component {
              data={this.state.data}
              renderItem={({item,index})=>
                 
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity style={styles.button} onPress={()=>{console.log(item.redirectionUrl)}}>
                     <Image
                     style={[styles.image]}
-                    source={{uri: item}}
+                    source={{uri: item.imgUrl}}
                     />
                 </TouchableOpacity>
                 }

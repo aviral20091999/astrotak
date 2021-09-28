@@ -15,16 +15,61 @@ class HomeScreen extends Component {
     super(props)
   }
   state={
-    dataOffers:''
+    offers:'',
+    horoscopes:'',
+    reports:'',
+    questionCategories:'',
+    reviews:'',
+    astrologerDetails:'',
   }
   componentDidMount(){
-    console.log(this.props.navigation)
     this.getData();
   }
   getData=async()=>{
     try {
       const res=await(axios.get('http://localhost:4000/api/v1/getOffers'));
       console.log(res.data);
+      this.setState({offers:res.data.data})
+    } catch (error) {
+      console.log(error.message)
+    }
+
+    try {
+      const res=await(axios.get('http://localhost:4000/api/v1/getHoroscopes'));
+      console.log(res.data);
+      this.setState({horoscopes:res.data.data})
+    } catch (error) {
+      console.log(error.message)
+    }
+
+    try {
+      const res=await(axios.get('http://localhost:4000/api/v1/getReports'));
+      console.log(res.data);
+      this.setState({reports:res.data.data})
+    } catch (error) {
+      console.log(error.message)
+    }
+
+    try {
+      const res=await(axios.get('http://localhost:4000/api/v1/getQuestions'));
+      console.log(res.data);
+      this.setState({questionCategories:res.data.data})
+    } catch (error) {
+      console.log(error.message)
+    }
+
+    try {
+      const res=await(axios.get('http://localhost:4000/api/v1/getReviews'));
+      console.log(res.data);
+      this.setState({reviews:res.data.data})
+    } catch (error) {
+      console.log(error.message)
+    }
+
+    try {
+      const res=await(axios.get('http://localhost:4000/api/v1/getAstrologerDetails'));
+      console.log(res.data);
+      this.setState({astrologerDetails:res.data.data})
     } catch (error) {
       console.log(error.message)
     }
@@ -33,22 +78,27 @@ class HomeScreen extends Component {
   render() {
     
     return (
+      
       <View>
+      
       <View style={{marginHorizontal:17}}>
         <Header search={false}/>
+        {this.state.offers!=''&&this.state.horoscopes!=''&&this.state.reports!=''&&this.state.questionCategories!=''&&this.state.reviews!=''&&this.state.astrologerDetails!=''?
         <ScrollView showsVerticalScrollIndicator={false}>
-          <Quotes />
-          <AstrologerCollection data={['https://i.ibb.co/FK3Dm9G/img1.png','https://i.ibb.co/VMqm2hx/img2.png','https://i.ibb.co/FK3Dm9G/img1.png','https://i.ibb.co/VMqm2hx/img2.png']}/>
-          <DailyHoroscope data={[{image:'https://i.ibb.co/2SR4wJm/hu1.png',title:'Aries',date:'March 21-April 19'},{image:'https://i.ibb.co/t2TNkm2/hu2.png',title:'Taurus',date:'April 20-May 20'},{image:'https://i.ibb.co/nQ20gBJ/hu3.png',title:'Gemini',date:'May 21-June 20'},{image:'https://i.ibb.co/t2TNkm2/hu2.png',title:'Virgo',date:'June 21-July 19'}]} />
-          <Reports data={[{image:'https://i.ibb.co/8Y64dSH/what1.png'},{image:'https://i.ibb.co/8Y64dSH/what1.png'},{image:'https://i.ibb.co/8Y64dSH/what1.png'}]} />
-          <Question />
-          <Review data={[{text:'I discussed with Mr. Arvind ji and i am very satisfied with the discussion.I discussed with Mr. Arvind ji and i am very satisfied with the discussion.',customer:'Aviral Arpan',location:'Ranchi,India'},{text:'I discussed with Mr. Arvind ji and i am very satisfied with the discussion.,I discussed with Mr. Arvind ji and i am very satisfied with the discussion ',customer:'Aviral Arpan',location:'Ranchi,India'}]}/>
-          <Text style={{marginTop:120}}></Text>
-          
-          
-          
-          
+        <Quotes />
+        <AstrologerCollection data={this.state.offers}/>
+        <DailyHoroscope data={this.state.horoscopes} />
+        <Reports data={this.state.reports} />
+        <Question categories={this.state.questionCategories}/>
+        <Review data={this.state.reviews}/>
+        <Text style={{marginTop:120}}></Text>
+        
+        
+        
+        
         </ScrollView>
+        :null}
+        
 
         
 

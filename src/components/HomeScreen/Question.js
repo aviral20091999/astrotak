@@ -27,9 +27,9 @@ class Reports extends Component {
             this.setState({selectedCategory:itemValue})
             }>
             <Picker.Item value='' label='Select a category' color='grey' />
-            <Picker.Item label="Career" value="career" color='black'/>
-            <Picker.Item label="Education" value="education" color='black'/>
-            <Picker.Item label="Relationship" value="relationship" color='black'/>
+            {
+              this.props.category.map((item)=><Picker.Item label={item} value={item} color='black'/>)
+            }
             </Picker>
             {/*<RNPickerSelect
             onValueChange={(value) => console.log(value)}

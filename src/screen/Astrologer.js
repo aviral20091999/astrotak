@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Text,View,ScrollView,Modal,StyleSheet,TouchableOpacity,TextInput,Image } from 'react-native'; 
+const axios = require('axios');
 import RadioButtonRN from 'radio-buttons-react-native';
 import Footer from '../components/Footer'
 import Header from '../components/HomeScreen/Header'
@@ -53,7 +54,7 @@ class Astrologer extends Component {
          },
          
          {
-          label: 'Price-high to low'
+          label: 'Price-hlow to high'
          }
         ], 
       selectedFilter: '',
@@ -62,12 +63,21 @@ class Astrologer extends Component {
       selectedSort:'',
       search:false,
       searchText:'',
-    data:[{name:'Arvind Misra',skill:'Coffee Cup Reading',language:'Hindi',price:'100',experience:'25'},
-          {name:'Aviral Arpan',skill:'Numerology, Tarot, Vastu, Palmistry',language:'English',price:'200',experience:'30'},
-          {name:'Arvind Misra',skill:'Coffee Cup Reading',language:'Hindi',price:'100',experience:'25'},
-          {name:'Aviral Arpan',skill:'Numerology, Tarot, Vastu, Palmistry',language:'English',price:'200',experience:'30'},
-          {name:'Arvind Misra',skill:'Coffee Cup Reading',language:'Hindi',price:'100',experience:'25'},
-          {name:'Aviral Arpan',skill:'Numerology, Tarot, Vastu, Palmistry',language:'English',price:'200',experience:'30'},]
+    data:'',
+  }
+  componentDidMount(){
+    this.getData();
+  }
+  getData=async()=>{
+
+    try {
+      const res=await(axios.get('http://localhost:4000/api/v1/getAstrologerDetails'));
+      console.log(res.data);
+      this.setState({data:res.data.data})
+    } catch (error) {
+      console.log(error.message)
+    }
+    
   }
   
   render() {
@@ -101,9 +111,44 @@ class Astrologer extends Component {
         </TouchableOpacity>
         
         </View>:null}
+        {this.state.data!=''?
         <ScrollView showsVerticalScrollIndicator={false}>
           
-          {(this.state.filter2==false||this.state.selectedFilter=='')&&(this.state.sort2==false||this.state.selectedSort=='')&&(this.state.search==false||this.state.searchText=='')?this.state.data.map((e, idx) => 
+        {(this.state.filter2==false||this.state.selectedFilter=='')&&(this.state.sort2==false||this.state.selectedSort=='')&&(this.state.search==false||this.state.searchText=='')?this.state.data.map((e, idx) => 
+        <Astro
+        name={e.name} 
+        address={e.skill} 
+        language={e.language} 
+        price={e.price} 
+        experience={e.experience+' years'}
+        />
+        ):null}
+        {(this.state.filter2==true&&this.state.selectedFilter!='')?this.state.data.filter((item)=>{return(item.skill.includes(this.state.selectedFilter)||item.language.includes(this.state.selectedFilter))}).map((e, idx) => 
+        <Astro
+        name={e.name} 
+        address={e.skill} 
+        language={e.language} 
+        price={e.price} 
+        experience={e.experience+' years'}
+        />
+        ):null}
+        {(this.state.sort2==true&&this.state.selectedSort!='')?this.state.data.sort((a,b)=>{
+          if(this.state.selectedSort=='Experience-high to low') {return b.experience-a.experience}
+          if(this.state.selectedSort=='Experience-low to high') {return a.experience-b.experience}
+          if(this.state.selectedSort=='Price-high to low') {return b.price-a.price}
+          if(this.state.selectedSort=='Price-low to high') {return a.price-b.price}
+        }).map((e, idx) => 
+        <Astro
+        name={e.name} 
+        address={e.skill} 
+        language={e.language} 
+        price={e.price} 
+        experience={e.experience+' years'}
+        />
+        ):null}
+        {
+          this.state.search&&this.state.searchText!=''?
+          this.state.data.filter((item)=>{return(item.name.includes(this.state.searchText)||item.language.includes(this.state.searchText)||item.skill.includes(this.state.searchText))}).map((e, idx) => 
           <Astro
           name={e.name} 
           address={e.skill} 
@@ -111,44 +156,11 @@ class Astrologer extends Component {
           price={e.price} 
           experience={e.experience+' years'}
           />
-          ):null}
-          {(this.state.filter2==true&&this.state.selectedFilter!='')?this.state.data.filter((item)=>{return(item.skill.includes(this.state.selectedFilter)||item.language.includes(this.state.selectedFilter))}).map((e, idx) => 
-          <Astro
-          name={e.name} 
-          address={e.skill} 
-          language={e.language} 
-          price={e.price} 
-          experience={e.experience+' years'}
-          />
-          ):null}
-          {(this.state.sort2==true&&this.state.selectedSort!='')?this.state.data.sort((a,b)=>{
-            if(this.state.selectedSort=='Experience-high to low') {return b.experience-a.experience}
-            if(this.state.selectedSort=='Experience-low to high') {return a.experience-b.experience}
-            if(this.state.selectedSort=='Price-high to low') {return b.price-a.price}
-            if(this.state.selectedSort=='Price-low to high') {return a.price-b.price}
-          }).map((e, idx) => 
-          <Astro
-          name={e.name} 
-          address={e.skill} 
-          language={e.language} 
-          price={e.price} 
-          experience={e.experience+' years'}
-          />
-          ):null}
-          {
-            this.state.search&&this.state.searchText!=''?
-            this.state.data.filter((item)=>{return(item.name.includes(this.state.searchText)||item.language.includes(this.state.searchText)||item.skill.includes(this.state.searchText))}).map((e, idx) => 
-            <Astro
-            name={e.name} 
-            address={e.skill} 
-            language={e.language} 
-            price={e.price} 
-            experience={e.experience+' years'}
-            />
-            ):null
-          }
-          <Text style={{marginTop:150}}>..</Text>
-        </ScrollView>
+          ):null
+        }
+        <Text style={{marginTop:150}}>..</Text>
+      </ScrollView>:null}
+        
 
         
         {this.state.filter? 

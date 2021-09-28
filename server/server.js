@@ -1,14 +1,16 @@
 require("dotenv").config();
 const express=require('express')
+const db=require("./db/index.js")
+var cors = require('cors');
 
 const app=express()
-
-app.get("/api/v1/getOffers",(req,res)=>{
+app.use(cors());
+app.get("/api/v1/getOffers",async (req,res)=>{
+    const offers=await db.query("select * from offers")
+    console.log(offers.rows);
     res.status(200).json({
         status:"success",
-        data:{
-            offer:["offer1","offer2"]
-        }
+        data:offers.rows,
     })
 })
 const port=process.env.PORT||3001

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+const axios = require('axios');
 import { Text,View,ScrollView,Dimensions } from 'react-native';
 import Footer from '../components/Footer'
 import Header from '../components/HomeScreen/Header'
@@ -13,8 +14,21 @@ class HomeScreen extends Component {
   constructor(props){
     super(props)
   }
+  state={
+    dataOffers:''
+  }
   componentDidMount(){
     console.log(this.props.navigation)
+    this.getData();
+  }
+  getData=async()=>{
+    try {
+      const res=await(axios.get('http://localhost:4000/api/v1/getOffers'));
+      console.log(res.data);
+    } catch (error) {
+      console.log(error.message)
+    }
+    
   }
   render() {
     
